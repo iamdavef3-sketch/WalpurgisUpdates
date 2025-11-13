@@ -3,7 +3,7 @@ name: Daily Walpurgis Update
 on:
   schedule:
     - cron: "0 11 * * *"  # 6 AM Florida time (11 AM UTC)
-  workflow_dispatch:        # manual trigger option
+  workflow_dispatch:  # manual trigger option
 
 jobs:
   send:
