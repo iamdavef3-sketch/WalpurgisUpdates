@@ -16,7 +16,7 @@ async function sendUpdate() {
   if (days > 0) {
     message = `# WALPURGIS NIGHT UPDATE\nManager it is ${days} days until **Walpurgisnacht**!`;
   } else if (days === 0) {
-    message = `# Today is WALPURGISNACHT!\n@Walpurgisnacht `;
+    message = `# Today is WALPURGISNACHT!\n@Walpurgisnacht`;
   } else {
     message = `# WALPURGIS NIGHT UPDATE\nThe ritual has passed. Await for the next Walpurgisnacht.`;
   }
