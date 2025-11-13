@@ -2,6 +2,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 
 const WEBHOOK_URL = process.env.WEBHOOK_URL;
+const ROLE_ID = "1438324999684362250";
 
 function getDaysUntil() {
   const today = dayjs().startOf("day");
@@ -11,18 +12,22 @@ function getDaysUntil() {
 
 async function sendUpdate() {
   const days = getDaysUntil();
-  let message;
+  let content;
 
   if (days > 0) {
-    message = `# WALPURGIS NIGHT UPDATE\nManager it is ${days} days until **Walpurgisnacht**!`;
+    content = `# WALPURGIS NIGHT UPDATE\nManager it is ${days} days until **Walpurgisnacht**!`;
   } else if (days === 0) {
-    message = `# Today is WALPURGISNACHT!\n@Walpurgisnacht`;
+    content = `# Today is WALPURGISNACHT!\n<@&${ROLE_ID}>`;
   } else {
-    message = `# WALPURGIS NIGHT UPDATE\nThe ritual has passed. Await for the next Walpurgisnacht.`;
+    content = `# WALPURGIS NIGHT UPDATE\nThe ritual has passed. Await the next Walpurgisnacht.`;
   }
 
-  await axios.post(WEBHOOK_URL, { content: message });
-  console.log("Sent:", message);
+  await axios.post(WEBHOOK_URL, {
+    content,
+    allowed_mentions: { parse: ["roles"] }
+  });
+
+  console.log("Sent:", content);
 }
 
 sendUpdate();
