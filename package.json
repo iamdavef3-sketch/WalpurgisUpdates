@@ -1,13 +1,13 @@
 {
-  "name": "walpurgis-webhook",
+  "name": "daily-walpurgis-update",
   "version": "1.0.0",
   "type": "module",
-  "dependencies": {
-    "axios": "^1.7.0",
-    "dayjs": "^1.11.10"
+  "main": "sendUpdate.js",
+  "scripts": {
+    "start": "node sendUpdate.js"
   },
-  "devDependencies": {
-    "eslint": "^8.51.0",
-    "nodemon": "^3.0.0"
+  "dependencies": {
+    "axios": "^1.7.7",
+    "dayjs": "^1.11.13"
   }
 }
