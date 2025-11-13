@@ -19,7 +19,8 @@ async function sendUpdate() {
   } else if (days === 0) {
     content = `# Today is WALPURGISNACHT!\n<@&${ROLE_ID}>`;
   } else {
-    content = `# WALPURGIS NIGHT UPDATE\nThe ritual has passed. Await the next Walpurgisnacht.`;
+    const pastDays = Math.abs(days);
+    content = `# WALPURGIS NIGHT UPDATE\nIt has been ${pastDays} days **since Walpurgisnacht**. Await the next ritual.`;
   }
 
   await axios.post(WEBHOOK_URL, {
