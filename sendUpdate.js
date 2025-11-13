@@ -1,21 +1,12 @@
 import axios from "axios";
 import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
-
-// Extend dayjs with plugins
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const WEBHOOK_URL = process.env.WEBHOOK_URL;
 const ROLE_ID = "1438324999684362250";
 
-// Define Florida EST timezone
-const FLORIDA_TZ = "America/New_York";
-
 function getDaysUntil() {
-  const today = dayjs().tz(FLORIDA_TZ).startOf("day"); // Florida time
-  const target = dayjs.tz("2026-02-01", FLORIDA_TZ).startOf("day"); // February 1, 2026, in Florida time
+  const today = dayjs().startOf("day");
+  const target = dayjs("2026-02-01");
   return target.diff(today, "day");
 }
 
@@ -34,7 +25,7 @@ async function sendUpdate() {
 
   await axios.post(WEBHOOK_URL, {
     content,
-    allowed_mentions: { parse: ["roles"] },
+    allowed_mentions: { parse: ["roles"] }
   });
 
   console.log("Sent:", content);
