@@ -20,13 +20,22 @@ async function sendUpdate() {
   const days = getDaysUntil();
   let content;
 
-  if (days > 0) content = `# WALPURGIS NIGHT UPDATE\nManager it is ${days} days until **Walpurgisnacht**!`;
-  else if (days === 0) content = `# Today is WALPURGISNACHT!\n<@&${ROLE_ID}>`;
-  else content = `# WALPURGIS NIGHT UPDATE\nIt has been ${Math.abs(days)} days **since Walpurgisnacht**. Await the next ritual.`;
+  if (days > 0) {
+    content =
+      `# WALPURGIS NIGHT UPDATE\n` +
+      `Manager it is ${days} days until **Walpurgisnacht**\n` +
+      `||Remember the rule. We do not extract until Walpurgis or we face punishment of the sack.||`;
+  } else if (days === 0) {
+    content = `# Today is WALPURGISNACHT!\n<@&${ROLE_ID}>`;
+  } else {
+    content =
+      `# WALPURGIS NIGHT UPDATE\n` +
+      `It has been ${Math.abs(days)} days since **Walpurgisnacht**. Await the next.`;
+  }
 
   await axios.post(WEBHOOK_URL, {
     content,
-    allowed_mentions: { parse: ["roles"] },
+    allowed_mentions: { parse: ["roles"] }
   });
 
   console.log("Sent:", content);
