@@ -9,6 +9,8 @@ dayjs.extend(timezone);
 const WEBHOOK_URL = process.env.WEBHOOK_URL;
 const ROLE_ID = "1438324999684362250";
 const FLORIDA_TIMEZONE = "America/New_York";
+const CUSTOM_FOOTER = process.env.CUSTOM_FOOTER || ""; 
+// Example: CUSTOM_FOOTER="||Remember the rule||"
 
 function getDaysUntil() {
   const today = dayjs().tz(FLORIDA_TIMEZONE).startOf("day");
@@ -24,24 +26,23 @@ async function sendUpdate() {
   const days = getDaysUntil();
   let content;
 
+  const footer = CUSTOM_FOOTER ? `\n${CUSTOM_FOOTER}` : "";
+
   if (days > 0) {
     const options = [
-      `Manager, it is ${days} days until **Walpurgisnacht**`,
+      `Manager it is ${days} days until **Walpurgisnacht**`,
       `${days} days remain until **Walpurgisnacht**`,
       `Only ${days} days left before **Walpurgisnacht** begins`,
       `${days} days until the night of Walpurgis`,
     ];
-    content =
-      `# WALPURGIS NIGHT UPDATE\n` +
-      pick(options) +
-      `\n||Remember the rule. We do not extract until Walpurgis or we face punishment of the sack.||`;
+    content = `# WALPURGIS NIGHT UPDATE\n${pick(options)}${footer}`;
   } else if (days === 0) {
     const options = [
       `# Today is WALPURGISNACHT!\n<@&${ROLE_ID}>`,
       `# It is WALPURGISNACHT.\n<@&${ROLE_ID}>`,
-      `# The walpurgis has come.\n<@&${ROLE_ID}>`,
+      `# The night has come.\n<@&${ROLE_ID}>`,
     ];
-    content = pick(options);
+    content = pick(options) + footer;
   } else {
     const passed = Math.abs(days);
     const options = [
@@ -49,7 +50,7 @@ async function sendUpdate() {
       `${passed} days have passed since **Walpurgisnacht**.`,
       `${passed} days beyond the last Walpurgis.`,
     ];
-    content = `# WALPURGIS NIGHT UPDATE\n` + pick(options);
+    content = `# WALPURGIS NIGHT UPDATE\n${pick(options)}${footer}`;
   }
 
   await axios.post(WEBHOOK_URL, {
