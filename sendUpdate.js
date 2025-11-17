@@ -16,21 +16,40 @@ function getDaysUntil() {
   return target.diff(today, "day");
 }
 
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 async function sendUpdate() {
   const days = getDaysUntil();
   let content;
 
   if (days > 0) {
+    const options = [
+      `Manager, it is ${days} days until **Walpurgisnacht**`,
+      `${days} days remain until **Walpurgisnacht**`,
+      `Only ${days} days left before **Walpurgisnacht** begins`,
+      `${days} days until the night of Walpurgis`,
+    ];
     content =
       `# WALPURGIS NIGHT UPDATE\n` +
-      `Manager it is ${days} days until **Walpurgisnacht**\n` +
-      `||Remember the rule. We do not extract until Walpurgis or we face punishment of the sack.||`;
+      pick(options) +
+      `\n||Remember the rule. We do not extract until Walpurgis or we face punishment of the sack.||`;
   } else if (days === 0) {
-    content = `# Today is WALPURGISNACHT!\n<@&${ROLE_ID}>`;
+    const options = [
+      `# Today is WALPURGISNACHT!\n<@&${ROLE_ID}>`,
+      `# It is WALPURGISNACHT.\n<@&${ROLE_ID}>`,
+      `# The walpurgis has come.\n<@&${ROLE_ID}>`,
+    ];
+    content = pick(options);
   } else {
-    content =
-      `# WALPURGIS NIGHT UPDATE\n` +
-      `It has been ${Math.abs(days)} days since **Walpurgisnacht**. Await the next.`;
+    const passed = Math.abs(days);
+    const options = [
+      `It has been ${passed} days since **Walpurgisnacht**. Await the next.`,
+      `${passed} days have passed since **Walpurgisnacht**.`,
+      `${passed} days beyond the last Walpurgis.`,
+    ];
+    content = `# WALPURGIS NIGHT UPDATE\n` + pick(options);
   }
 
   await axios.post(WEBHOOK_URL, {
