@@ -40,7 +40,7 @@ async function sendUpdate() {
     const options = [
       `# Today is WALPURGISNACHT!\n<@&${ROLE_ID}>`,
       `# It is WALPURGISNACHT.\n<@&${ROLE_ID}>`,
-      `# The night has come.\n<@&${ROLE_ID}>`,
+      `# The walpurgis night has come.\n<@&${ROLE_ID}>`,
     ];
     content = pick(options) + footer;
   } else {
@@ -50,7 +50,8 @@ async function sendUpdate() {
       `${passed} days have passed since **Walpurgisnacht**.`,
       `${passed} days beyond the last Walpurgis.`,
     ];
-    content = `# WALPURGIS NIGHT UPDATE\n${pick(options)}${footer}`;
+    content = `# WALPURGIS NIGHT UPDATE\n${pick(options)}${footer}\n${days} until asher's hair is back
+    `;
   }
 
   await axios.post(WEBHOOK_URL, {
