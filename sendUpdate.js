@@ -13,7 +13,6 @@ const CUSTOM_FOOTER = process.env.CUSTOM_FOOTER || "";
 
 // --- CONFIGURATION ---
 const WALPURGIS_DATE = "2026-02-01"; 
-const ASHER_DATE = "2026-04-01"; 
 const WALPURGIS_PING_HOUR = 17; // 17:00 Military Time = 5:00 PM
 
 function getDaysUntil(dateString) {
@@ -31,7 +30,6 @@ async function sendUpdate() {
   const currentHour = nowCtx.hour();
   
   const wDays = getDaysUntil(WALPURGIS_DATE);
-  const aDays = getDaysUntil(ASHER_DATE);
 
   // --- LOGIC: PREVENT DOUBLE POSTING ---
   // If it is afternoon (>= 12:00 PM) AND it is NOT Walpurgis Day, stop here.
@@ -43,13 +41,12 @@ async function sendUpdate() {
 
   const footer = CUSTOM_FOOTER ? `\n${CUSTOM_FOOTER}` : "";
   let mainContent = "";
-  let asherContent = "";
 
-  // --- 1. WALPURGIS LOGIC ---
+  // --- WALPURGIS LOGIC ---
   if (wDays > 0) {
     // Regular Countdown (Morning runs only due to check above)
     const options = [
-      `Manager it is **${wDays}** days until **Walpurgisnacht**`,
+      `It is currently **${wDays}** days until **Walpurgisnacht**`,
       `**${wDays}** days remain until **Walpurgisnacht**`,
       `Only **${wDays}** days left before **Walpurgisnacht** begins`,
       `**${wDays}** days until the night of Walpurgis`,
@@ -80,18 +77,8 @@ async function sendUpdate() {
     mainContent = `# WALPURGIS NIGHT UPDATE\n${pick(options)}`;
   }
 
-  // --- 2. ASHER LOGIC ---
-  // This is just appended to the bottom of whatever message sends
-  if (aDays > 0) {
-    asherContent = `\n${aDays} days until Asher's hair is back`;
-  } else if (aDays === 0) {
-    asherContent = `\nAsher's hair is back today!`;
-  } else {
-    asherContent = `\nAsher's hair is back`; 
-  }
-
   // --- COMBINE AND SEND ---
-  const finalContent = `${mainContent}${footer}${asherContent}`;
+  const finalContent = `${mainContent}${footer}`;
 
   await axios.post(WEBHOOK_URL, {
     content: finalContent,
@@ -99,7 +86,7 @@ async function sendUpdate() {
   });
 
   console.log("Sent update.");
-  console.log(`Walpurgis: ${wDays} days, Asher: ${aDays} days, Hour: ${currentHour}`);
+  console.log(`Walpurgis: ${wDays} days, Hour: ${currentHour}`);
 }
 
 sendUpdate().catch(console.error);
