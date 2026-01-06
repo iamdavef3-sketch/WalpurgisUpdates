@@ -1,3 +1,7 @@
+// Run: npm install axios dayjs dotenv
+// Usage: node index.js
+
+import "dotenv/config"; // Loads .env file automatically
 import axios from "axios";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
@@ -9,15 +13,19 @@ dayjs.extend(timezone);
 const WEBHOOK_URL = process.env.WEBHOOK_URL;
 const ROLE_ID = "1438324999684362250";
 const FLORIDA_TIMEZONE = "America/New_York";
-const CUSTOM_FOOTER = process.env.CUSTOM_FOOTER || ""; 
+const CUSTOM_FOOTER = process.env.CUSTOM_FOOTER || "";
 
 // --- CONFIGURATION ---
-const WALPURGIS_DATE = "2026-02-01"; 
+const WALPURGIS_DATE = "2026-02-01";
 const WALPURGIS_PING_HOUR = 17; // 17:00 Military Time = 5:00 PM
+
+// Set this to true to force a message even if it's the afternoon (FOR TESTING ONLY)
+const FORCE_SEND = true; 
 
 function getDaysUntil(dateString) {
   const today = dayjs().tz(FLORIDA_TIMEZONE).startOf("day");
   const target = dayjs.tz(dateString, FLORIDA_TIMEZONE).startOf("day");
+  // Returns difference in days (negative if passed)
   return target.diff(today, "day");
 }
 
@@ -26,17 +34,30 @@ function pick(arr) {
 }
 
 async function sendUpdate() {
+  if (!WEBHOOK_URL) {
+    console.error("❌ ERROR: WEBHOOK_URL is missing. Check your .env file.");
+    return;
+  }
+
   const nowCtx = dayjs().tz(FLORIDA_TIMEZONE);
   const currentHour = nowCtx.hour();
-  
   const wDays = getDaysUntil(WALPURGIS_DATE);
 
+  console.log(`--- DEBUG INFO ---`);
+  console.log(`Current Time (FL): ${nowCtx.format("YYYY-MM-DD HH:mm:ss")}`);
+  console.log(`Days until Walpurgis: ${wDays}`);
+  console.log(`Current Hour: ${currentHour}`);
+  console.log(`------------------`);
+
   // --- LOGIC: PREVENT DOUBLE POSTING ---
-  // If it is afternoon (>= 12:00 PM) AND it is NOT Walpurgis Day, stop here.
-  // We only want the afternoon run to actually do something on Day 0.
+  // If it is afternoon (>= 12:00 PM) AND it is NOT Walpurgis Day
   if (currentHour >= 12 && wDays !== 0) {
-    console.log("Afternoon run on a non-Walpurgis day. Skipping update to avoid double-post.");
-    return;
+    if (FORCE_SEND) {
+      console.log("⚠️ FORCE_SEND is enabled. Ignoring time check...");
+    } else {
+      console.log("🚫 Afternoon run on a non-Walpurgis day. Skipping update.");
+      return;
+    }
   }
 
   const footer = CUSTOM_FOOTER ? `\n${CUSTOM_FOOTER}` : "";
@@ -44,7 +65,7 @@ async function sendUpdate() {
 
   // --- WALPURGIS LOGIC ---
   if (wDays > 0) {
-    // Regular Countdown (Morning runs only due to check above)
+    // Countdown
     const options = [
       `It is currently **${wDays}** days until **Walpurgisnacht**`,
       `**${wDays}** days remain until **Walpurgisnacht**`,
@@ -56,19 +77,19 @@ async function sendUpdate() {
   else if (wDays === 0) {
     // IT IS WALPURGIS DAY
     if (currentHour >= WALPURGIS_PING_HOUR) {
-        // It is 5:00 PM or later: SEND THE PING
+        // 5:00 PM or later: PING
         const options = [
             `# Today is WALPURGISNACHT!\n<@&${ROLE_ID}>`,
             `# It is WALPURGISNACHT.\n<@&${ROLE_ID}>`,
         ];
         mainContent = pick(options);
     } else {
-        // It is Morning (6 AM run): Hype up, but NO PING
-        mainContent = `# Today is WALPURGISNACHT!\n(The extractions begins at 5:00 PM EST...)`;
+        // Morning: NO PING
+        mainContent = `# Today is WALPURGISNACHT!\n(The extraction begins at 5:00 PM EST...)`;
     }
   } 
   else {
-    // Date Passed (Morning runs only due to check above)
+    // Date Passed
     const passed = Math.abs(wDays);
     const options = [
       `It has been ${passed} days since **Walpurgisnacht**.`,
@@ -80,13 +101,18 @@ async function sendUpdate() {
   // --- COMBINE AND SEND ---
   const finalContent = `${mainContent}${footer}`;
 
-  await axios.post(WEBHOOK_URL, {
-    content: finalContent,
-    allowed_mentions: { parse: ["roles"] }
-  });
-
-  console.log("Sent update.");
-  console.log(`Walpurgis: ${wDays} days, Hour: ${currentHour}`);
+  try {
+    await axios.post(WEBHOOK_URL, {
+      content: finalContent,
+      allowed_mentions: { parse: ["roles"] }
+    });
+    console.log("✅ Sent update successfully.");
+  } catch (error) {
+    console.error("❌ Failed to send webhook:", error.message);
+    if (error.response) {
+        console.error("Discord Error Data:", error.response.data);
+    }
+  }
 }
 
 sendUpdate().catch(console.error);
