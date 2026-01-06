@@ -20,7 +20,7 @@ const WALPURGIS_DATE = "2026-02-01";
 const WALPURGIS_PING_HOUR = 17; // 17:00 Military Time = 5:00 PM
 
 // Set this to true to force a message even if it's the afternoon (FOR TESTING ONLY)
-const FORCE_SEND = true; 
+const FORCE_SEND = false; 
 
 function getDaysUntil(dateString) {
   const today = dayjs().tz(FLORIDA_TIMEZONE).startOf("day");
