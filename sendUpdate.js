@@ -1,4 +1,4 @@
-no// Run: npm install axios dayjs dotenv
+
 // Usage: node index.js
 
 import "dotenv/config"; // Loads .env file automatically
