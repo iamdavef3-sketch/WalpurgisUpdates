@@ -19,6 +19,9 @@ const CUSTOM_FOOTER = process.env.CUSTOM_FOOTER || "";
 const WALPURGIS_DATE = "2026-02-01";
 const WALPURGIS_PING_HOUR = 17; // 17:00 Military Time = 5:00 PM
 
+// Date Asher became bald (Set to today: Jan 7, 2026)
+const ASHER_BALD_DATE = "2026-01-07"; 
+
 // Set this to true to force a message even if it's the afternoon (FOR TESTING ONLY)
 const FORCE_SEND = false; 
 
@@ -65,7 +68,6 @@ async function sendUpdate() {
 
   // --- WALPURGIS LOGIC ---
   if (wDays > 0) {
-    // Countdown
     const options = [
       `It is currently **${wDays}** days until **Walpurgisnacht**`,
       `**${wDays}** days remain until **Walpurgisnacht**`,
@@ -77,14 +79,12 @@ async function sendUpdate() {
   else if (wDays === 0) {
     // IT IS WALPURGIS DAY
     if (currentHour >= WALPURGIS_PING_HOUR) {
-        // 5:00 PM or later: PING
         const options = [
             `# Today is WALPURGISNACHT!\n<@&${ROLE_ID}>`,
             `# It is WALPURGISNACHT.\n<@&${ROLE_ID}>`,
         ];
         mainContent = pick(options);
     } else {
-        // Morning: NO PING
         mainContent = `# Today is WALPURGISNACHT!\n(The extraction begins at 5:00 PM EST...)`;
     }
   } 
@@ -97,6 +97,15 @@ async function sendUpdate() {
     ];
     mainContent = `# WALPURGIS NIGHT UPDATE\n${pick(options)}`;
   }
+
+  // --- ASHER BALD LOGIC ---
+  // Calculate days passed since the start date
+  const todayStart = nowCtx.startOf("day");
+  const baldStart = dayjs.tz(ASHER_BALD_DATE, FLORIDA_TIMEZONE).startOf("day");
+  const daysBald = todayStart.diff(baldStart, "day");
+
+  // Add the line to the content
+  mainContent += `\nIt has been **${daysBald}** days since Asher has been bald.`;
 
   // --- COMBINE AND SEND ---
   const finalContent = `${mainContent}${footer}`;
