@@ -16,14 +16,14 @@ const FLORIDA_TIMEZONE = "America/New_York";
 const CUSTOM_FOOTER = process.env.CUSTOM_FOOTER || "";
 
 // --- CONFIGURATION ---
-const WALPURGIS_DATE = "2026-02-01";
+const WALPURGIS_DATE = "2026-10-01";
 const WALPURGIS_PING_HOUR = 17; // 17:00 Military Time = 5:00 PM
 
 // Date Asher became bald (Set to today: Jan 7, 2026)
 const ASHER_BALD_DATE = "2026-01-07"; 
 
 // Set this to true to force a message even if it's the afternoon (FOR TESTING ONLY)
-const FORCE_SEND = false; 
+const FORCE_SEND = true; 
 
 function getDaysUntil(dateString) {
   const today = dayjs().tz(FLORIDA_TIMEZONE).startOf("day");
