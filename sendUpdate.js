@@ -16,7 +16,7 @@ const FLORIDA_TIMEZONE = "America/New_York";
 const CUSTOM_FOOTER = process.env.CUSTOM_FOOTER || "";
 
 // --- CONFIGURATION ---
-const WALPURGIS_DATE = "2026-02-13";
+const WALPURGIS_DATE = "2026-02-18";
 const WALPURGIS_PING_HOUR = 17; // 17:00 Military Time = 5:00 PM
 
 // Date Asher became bald (Set to today: Jan 7, 2026)
