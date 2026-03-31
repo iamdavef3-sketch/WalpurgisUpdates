@@ -20,7 +20,7 @@ const WALPURGIS_DATE = "2026-06-5";
 const WALPURGIS_PING_HOUR = 17; // 17:00 Military Time = 5:00 PM
 
 // Date Asher became bald (Set to today: Jan 7, 2026)
-const ASHER_BALD_DATE = "2026-01-07"; 
+const ASHER_BALD_DATE = "2026-03-31"; 
 
 // Set this to true to force a message even if it's the afternoon (FOR TESTING ONLY)
 const FORCE_SEND = false; 
