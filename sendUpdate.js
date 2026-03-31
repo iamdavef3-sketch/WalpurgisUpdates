@@ -74,7 +74,7 @@ async function sendUpdate() {
       `Only **${wDays}** days left before **Walpurgisnacht** begins`,
       `**${wDays}** days until the night of Walpurgis`,
     ];
-    mainContent = `# WALPURGIS NIGHT UPDATE\n${pick(options)}`;
+    mainContent = `# Faust's updates\n${pick(options)}`;
   } 
   else if (wDays === 0) {
     // IT IS WALPURGIS DAY
