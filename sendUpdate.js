@@ -23,7 +23,7 @@ const WALPURGIS_PING_HOUR = 17; // 17:00 Military Time = 5:00 PM
 const ASHER_BALD_DATE = "2026-03-31"; 
 
 // Set this to true to force a message even if it's the afternoon (FOR TESTING ONLY)
-const FORCE_SEND = false; 
+const FORCE_SEND = true; 
 
 function getDaysUntil(dateString) {
   const today = dayjs().tz(FLORIDA_TIMEZONE).startOf("day");
